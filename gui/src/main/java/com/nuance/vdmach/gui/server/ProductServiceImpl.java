@@ -1,14 +1,25 @@
 package com.nuance.vdmach.gui.server;
 
-import com.nuance.vdmach.gui.client.services.InventoryService;
-import com.nuance.vdmach.gui.shared.FieldVerifier;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nuance.vdmach.common.vo.ItemDTO;
+import com.nuance.vdmach.core.services.InventoryService;
+import com.nuance.vdmach.gui.client.services.ProductService;
+import com.nuance.vdmach.gui.shared.FieldVerifier;
 
 /**
  * The server-side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
-public class InventoryServiceImpl extends RemoteServiceServlet implements InventoryService {
+@Named
+public class ProductServiceImpl extends RemoteServiceServlet implements ProductService {
+
+  @Inject
+  private InventoryService inventoryService;
 
   public String greetServer(String input) throws IllegalArgumentException {
     // Verify that the input is valid.
@@ -28,6 +39,10 @@ public class InventoryServiceImpl extends RemoteServiceServlet implements Invent
 
     return "Hello, " + input + "!<br><br>I am running " + serverInfo
         + ".<br><br>It looks like you are using:<br>" + userAgent;
+  }
+
+  public List<ItemDTO> getAllProducts() {
+    return inventoryService.findAllItems();
   }
 
   /**

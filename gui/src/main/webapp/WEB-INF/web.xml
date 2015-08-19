@@ -8,12 +8,12 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>inventoryServlet</servlet-name>
-    <servlet-class>com.nuance.vdmach.gui.server.InventoryServiceImpl</servlet-class>
+    <servlet-class>com.nuance.vdmach.gui.server.ProductServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
     <servlet-name>inventoryServlet</servlet-name>
-    <url-pattern>/vendingmachine/inventory</url-pattern>
+    <url-pattern>/vendingmachine/product</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

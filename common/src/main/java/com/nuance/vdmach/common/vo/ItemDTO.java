@@ -1,11 +1,13 @@
 package com.nuance.vdmach.common.vo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ediband1
  *         date:   8/18/15 1:28 PM
  */
-public class ItemDTO {
+public class ItemDTO implements Serializable {
 
     private Long id;
 

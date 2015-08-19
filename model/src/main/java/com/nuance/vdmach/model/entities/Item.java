@@ -3,11 +3,10 @@ package com.nuance.vdmach.model.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 /**
  * Item that can be sold in the vending machine
+ *
  * @author ediband1
  *         date:   8/18/15 1:20 PM
  */

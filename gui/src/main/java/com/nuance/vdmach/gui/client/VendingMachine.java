@@ -1,7 +1,7 @@
 package com.nuance.vdmach.gui.client;
 
-import com.nuance.vdmach.gui.client.services.InventoryService;
-import com.nuance.vdmach.gui.client.services.InventoryServiceAsync;
+import com.nuance.vdmach.gui.client.services.ProductService;
+import com.nuance.vdmach.gui.client.services.ProductServiceAsync;
 import com.nuance.vdmach.gui.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -28,7 +28,7 @@ public class VendingMachine implements EntryPoint {
       + "attempting to contact the server. Please check your network "
       + "connection and try again.";
 
-  private final InventoryServiceAsync greetingService = GWT.create(InventoryService.class);
+  private final ProductServiceAsync greetingService = GWT.create(ProductService.class);
 
   public void onModuleLoad() {
     final Button sendButton = new Button("Send");

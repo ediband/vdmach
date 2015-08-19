@@ -1,9 +1,13 @@
 package com.nuance.vdmach.model.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nuance.vdmach.common.util.VOUtil;
 import com.nuance.vdmach.common.vo.ItemDTO;
@@ -27,11 +31,18 @@ public class ItemRepository {
     }
 
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public List<ItemDTO> findAllItems() {
+
+        Item test = new Item();
+        test.setName("testName");
+        itemRepositoryInterface.save(test);
+
         List<ItemDTO> itemDTOs = null;
 
         List<Item> items = itemRepositoryInterface.findAll();
         if (items != null) {
+            itemDTOs = new ArrayList<ItemDTO>();
             for (Item item : items) {
                 itemDTOs.add(VOUtil.convertToVO(item, ItemDTO.class));
             }
