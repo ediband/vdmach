@@ -5,20 +5,35 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>inventoryServlet</servlet-name>
-    <servlet-class>com.nuance.vdmach.gui.server.ProductServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>inventoryServlet</servlet-name>
-    <url-pattern>/vendingmachine/product</url-pattern>
-  </servlet-mapping>
-  
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>VendingMachine.html</welcome-file>
-  </welcome-file-list>
+
+    <!-- Spring Context -->
+    <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </context-param>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>com.nuance.vdmach</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+    <!-- Servlets -->
+    <servlet>
+        <servlet-name>GWTService</servlet-name>
+        <servlet-class>fr.sertelon.spring.gwtrpc.SpringRemoteServiceServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GWTService</servlet-name>
+        <url-pattern>*.rpc</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>VendingMachine.html</welcome-file>
+    </welcome-file-list>
 
 </web-app>

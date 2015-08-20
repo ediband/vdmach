@@ -5,41 +5,20 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nuance.vdmach.common.vo.ItemDTO;
 import com.nuance.vdmach.core.services.InventoryService;
 import com.nuance.vdmach.gui.client.services.ProductService;
-import com.nuance.vdmach.gui.shared.FieldVerifier;
 
 /**
  * The server-side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
 @Named
-public class ProductServiceImpl extends RemoteServiceServlet implements ProductService {
+public class ProductServiceImpl implements ProductService {
 
   @Inject
   private InventoryService inventoryService;
 
-  public String greetServer(String input) throws IllegalArgumentException {
-    // Verify that the input is valid.
-    if (!FieldVerifier.isValidName(input)) {
-      // If the input is not valid, throw an IllegalArgumentException back to
-      // the client.
-      throw new IllegalArgumentException(
-          "Name must be at least 4 characters long");
-    }
-
-    String serverInfo = getServletContext().getServerInfo();
-    String userAgent = getThreadLocalRequest().getHeader("User-Agent");
-
-    // Escape data from the client to avoid cross-site script vulnerabilities.
-    input = escapeHtml(input);
-    userAgent = escapeHtml(userAgent);
-
-    return "Hello, " + input + "!<br><br>I am running " + serverInfo
-        + ".<br><br>It looks like you are using:<br>" + userAgent;
-  }
 
   public List<ItemDTO> getAllProducts() {
     return inventoryService.findAllItems();

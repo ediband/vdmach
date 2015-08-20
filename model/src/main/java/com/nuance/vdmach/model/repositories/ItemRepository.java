@@ -6,9 +6,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.nuance.vdmach.common.util.VOUtil;
 import com.nuance.vdmach.common.vo.ItemDTO;
 import com.nuance.vdmach.model.entities.Item;
@@ -30,14 +27,7 @@ public class ItemRepository {
         return item != null ? VOUtil.convertToVO(item, ItemDTO.class) : null;
     }
 
-
-    @Transactional(propagation = Propagation.REQUIRED)
     public List<ItemDTO> findAllItems() {
-
-        Item test = new Item();
-        test.setName("testName");
-        itemRepositoryInterface.save(test);
-
         List<ItemDTO> itemDTOs = null;
 
         List<Item> items = itemRepositoryInterface.findAll();

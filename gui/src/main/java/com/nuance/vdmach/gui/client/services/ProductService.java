@@ -10,7 +10,7 @@ import com.nuance.vdmach.common.vo.ItemDTO;
 /**
  * The client-side stub for the RPC service.
  */
-@RemoteServiceRelativePath("product")
+@RemoteServiceRelativePath("product.rpc")
 public interface ProductService extends RemoteService {
 
 
@@ -21,9 +21,6 @@ public interface ProductService extends RemoteService {
             return instance;
         }
     }
-
-
-    String greetServer(String name) throws IllegalArgumentException;
 
     List<ItemDTO> getAllProducts();
 }
