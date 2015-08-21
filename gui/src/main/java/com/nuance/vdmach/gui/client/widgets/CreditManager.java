@@ -95,7 +95,7 @@ public class CreditManager extends Composite implements ItemPurchaser.CreditChec
         refundBtn.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                Bus.EVENT_BUS.fireEvent(new SystemMessageEvent("You got $ " + credit + " back!", MessageType.INFO));
+                Bus.EVENT_BUS.fireEvent(new SystemMessageEvent("You get $" + credit + " back!", MessageType.INFO));
                 resetCredit();
             }
         });

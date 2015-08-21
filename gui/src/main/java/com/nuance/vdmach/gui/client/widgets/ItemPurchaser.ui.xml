@@ -19,7 +19,7 @@
 
         .purchaseBtn {
             position: relative;
-            top: 18px;
+            top: 14px;
             margin-left: 2px;
         }
         .error {

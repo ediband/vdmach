@@ -28,7 +28,7 @@
     <g:VerticalPanel>
         <g:Label addStyleNames="{style.controlLabel}">Get Your Product Here</g:Label>
 
-        <g:Label ui:field="systemMsg" addStyleNames="{style.msg}"/>
+        <g:HTML ui:field="systemMsg" addStyleNames="{style.msg}"/>
     </g:VerticalPanel>
 
 </ui:UiBinder>

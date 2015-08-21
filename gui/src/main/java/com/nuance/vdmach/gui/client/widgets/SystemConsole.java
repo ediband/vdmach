@@ -5,7 +5,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.nuance.vdmach.gui.client.event.Bus;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEvent;
@@ -34,7 +34,7 @@ public class SystemConsole extends Composite {
     }
 
     @UiField
-    Label systemMsg;
+    HTML systemMsg;
 
     @UiField
     SystemConsoleStyle style;
@@ -53,7 +53,7 @@ public class SystemConsole extends Composite {
                 if (event.getProductSold() != null) {
                     String msg = "You've purchased " + event.getQtySold() + " " + event.getProductSold().getName() + "!";
                     if (event.getChange() > 0.0) {
-                        msg += "\n You get $" + event.getChange() + " of change back!";
+                        msg += "<br /> You get $" + event.getChange() + " of change back!";
                     }
                     displayInfoMessage(msg);
                 }
@@ -62,7 +62,17 @@ public class SystemConsole extends Composite {
         Bus.EVENT_BUS.addHandler(SystemMessageEvent.TYPE, new SystemMessageEventHandler() {
             @Override
             public void onSystemMessage(SystemMessageEvent event) {
-                displayMessage(event.getMessage(), event.getMessageType().name().toLowerCase());
+                switch (event.getMessageType()) {
+                    case ERROR:
+                        displayErrorMessage(event.getMessage());
+                        break;
+                    case INFO:
+                        displayInfoMessage(event.getMessage());
+                        break;
+                    default:
+                        displayMessage(event.getMessage(), null);
+                        break;
+                }
             }
         });
     }
@@ -75,9 +85,11 @@ public class SystemConsole extends Composite {
     }
 
     public void displayMessage(String txt, String newStyle) {
-        systemMsg.setText(txt);
+        systemMsg.setHTML(txt);
         clearColorStyles();
-        systemMsg.addStyleName(newStyle);
+        if (newStyle != null) {
+            systemMsg.addStyleName(newStyle);
+        }
     }
 
     private void clearColorStyles() {
