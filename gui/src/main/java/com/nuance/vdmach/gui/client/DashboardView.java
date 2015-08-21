@@ -26,7 +26,7 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.nuance.vdmach.common.vo.ItemDTO;
 import com.nuance.vdmach.gui.client.event.Bus;
-import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEvent;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseEvent;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseEventHandler;
 import com.nuance.vdmach.gui.client.exceptions.InsufficientFundsException;
@@ -98,7 +98,7 @@ public class DashboardView extends Composite {
                         public void onSuccess(List<ItemDTO> result) {
                             productsList.setList(result);
                             ItemDTO product = getProductForId(result, event.getProductId());
-                            Bus.EVENT_BUS.fireEvent(new InventoryUpdateSuccessfulEvent(product, event.getProductQty(), remainder));
+                            Bus.EVENT_BUS.fireEvent(new ProductPurchaseSuccessfulEvent(product, event.getProductQty(), remainder));
                         }
                     });
 

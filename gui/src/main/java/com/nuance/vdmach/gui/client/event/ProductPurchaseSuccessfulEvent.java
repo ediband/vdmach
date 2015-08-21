@@ -7,18 +7,18 @@ import com.nuance.vdmach.common.vo.ItemDTO;
  * @author edi
  *         15-08-21 1:10 AM.
  */
-public class InventoryUpdateSuccessfulEvent extends GwtEvent<InventoryUpdateSuccessfulEventHandler> {
+public class ProductPurchaseSuccessfulEvent extends GwtEvent<ProductPurchaseSuccessfulEventHandler> {
 
-    public static final Type<InventoryUpdateSuccessfulEventHandler> TYPE = new Type<InventoryUpdateSuccessfulEventHandler>();
+    public static final Type<ProductPurchaseSuccessfulEventHandler> TYPE = new Type<ProductPurchaseSuccessfulEventHandler>();
 
     private ItemDTO productSold;
     private int qtySold;
     private float change;
 
-    public InventoryUpdateSuccessfulEvent(ItemDTO sold, int qty, float change) {
+    public ProductPurchaseSuccessfulEvent(ItemDTO sold, int qty, float change) {
         productSold = sold;
         qtySold = qty;
-        change = change;
+        this.change = change;
     }
 
     public ItemDTO getProductSold() {
@@ -34,12 +34,12 @@ public class InventoryUpdateSuccessfulEvent extends GwtEvent<InventoryUpdateSucc
     }
 
     @Override
-    public Type<InventoryUpdateSuccessfulEventHandler> getAssociatedType() {
+    public Type<ProductPurchaseSuccessfulEventHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(InventoryUpdateSuccessfulEventHandler handler) {
+    protected void dispatch(ProductPurchaseSuccessfulEventHandler handler) {
         handler.onInventoryUpdate(this);
     }
 }

@@ -16,8 +16,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.nuance.vdmach.gui.client.event.Bus;
-import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
-import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEventHandler;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEvent;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEventHandler;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseEvent;
 
 /**
@@ -70,9 +70,9 @@ public class ItemPurchaser extends Composite {
     }
 
     private void registerEventHandlers() {
-        Bus.EVENT_BUS.addHandler(InventoryUpdateSuccessfulEvent.TYPE, new InventoryUpdateSuccessfulEventHandler() {
+        Bus.EVENT_BUS.addHandler(ProductPurchaseSuccessfulEvent.TYPE, new ProductPurchaseSuccessfulEventHandler() {
             @Override
-            public void onInventoryUpdate(InventoryUpdateSuccessfulEvent event) {
+            public void onInventoryUpdate(ProductPurchaseSuccessfulEvent event) {
                 clearFields();
             }
         });

@@ -18,8 +18,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.nuance.vdmach.gui.client.event.Bus;
-import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
-import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEventHandler;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEvent;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEventHandler;
 import com.nuance.vdmach.gui.client.event.SystemMessageEvent;
 import com.nuance.vdmach.gui.client.event.SystemMessageEvent.MessageType;
 
@@ -104,10 +104,10 @@ public class CreditManager extends Composite implements ItemPurchaser.CreditChec
     }
 
     private void registerEventHandlers() {
-        Bus.EVENT_BUS.addHandler(InventoryUpdateSuccessfulEvent.TYPE, new InventoryUpdateSuccessfulEventHandler() {
+        Bus.EVENT_BUS.addHandler(ProductPurchaseSuccessfulEvent.TYPE, new ProductPurchaseSuccessfulEventHandler() {
             @Override
-            public void onInventoryUpdate(InventoryUpdateSuccessfulEvent event) {
-                setCredit(credit - (event.getQtySold() * event.getProductSold().getPrice()));
+            public void onInventoryUpdate(ProductPurchaseSuccessfulEvent event) {
+                resetCredit();
             }
         });
     }

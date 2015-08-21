@@ -8,8 +8,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.nuance.vdmach.gui.client.event.Bus;
-import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
-import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEventHandler;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEvent;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEventHandler;
 import com.nuance.vdmach.gui.client.event.SystemMessageEvent;
 import com.nuance.vdmach.gui.client.event.SystemMessageEventHandler;
 
@@ -47,9 +47,9 @@ public class SystemConsole extends Composite {
     }
 
     private void registerEventHandlers() {
-        Bus.EVENT_BUS.addHandler(InventoryUpdateSuccessfulEvent.TYPE, new InventoryUpdateSuccessfulEventHandler() {
+        Bus.EVENT_BUS.addHandler(ProductPurchaseSuccessfulEvent.TYPE, new ProductPurchaseSuccessfulEventHandler() {
             @Override
-            public void onInventoryUpdate(InventoryUpdateSuccessfulEvent event) {
+            public void onInventoryUpdate(ProductPurchaseSuccessfulEvent event) {
                 if (event.getProductSold() != null) {
                     String msg = "You've purchased " + event.getQtySold() + " " + event.getProductSold().getName() + "!";
                     if (event.getChange() > 0.0) {
