@@ -14,20 +14,20 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.nuance.vdmach.gui.client.event.EventUtil;
+import com.nuance.vdmach.gui.client.event.Bus;
 import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
 import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEventHandler;
+import com.nuance.vdmach.gui.client.event.SystemMessageEvent;
+import com.nuance.vdmach.gui.client.event.SystemMessageEvent.MessageType;
 
 /**
  * @author edi
  *         15-08-18 11:37 PM.
  */
-public class CreditManager extends Composite {
+public class CreditManager extends Composite implements ItemPurchaser.CreditChecker {
 
     public static final String PROMPT_CREDIT_INPUT = "Amount $ ...";
     public static final String TOTAL = "Total ($): ";
@@ -53,10 +53,6 @@ public class CreditManager extends Composite {
     Label errorMsg;
 
     private float credit = 0.0f;
-
-    private DialogBox dialogBox;
-    private HTML dialogBoxContent;
-
 
     public CreditManager() {
         initWidget(binder.createAndBindUi(this));
@@ -99,30 +95,21 @@ public class CreditManager extends Composite {
         refundBtn.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                dialogBoxContent.setText("You got $ " + credit + " back!");
-                dialogBox.showRelativeTo(refundBtn);
+                Bus.EVENT_BUS.fireEvent(new SystemMessageEvent("You got $ " + credit + " back!", MessageType.INFO));
                 resetCredit();
             }
         });
 
         registerEventHandlers();
-
-        initDialogBox();
     }
 
     private void registerEventHandlers() {
-        EventUtil.EVENT_BUS.addHandler(InventoryUpdateSuccessfulEvent.TYPE, new InventoryUpdateSuccessfulEventHandler() {
+        Bus.EVENT_BUS.addHandler(InventoryUpdateSuccessfulEvent.TYPE, new InventoryUpdateSuccessfulEventHandler() {
             @Override
             public void onInventoryUpdate(InventoryUpdateSuccessfulEvent event) {
                 setCredit(credit - (event.getQtySold() * event.getProductSold().getPrice()));
             }
         });
-    }
-
-    private void initDialogBox() {
-        dialogBox = new DialogBox(true);
-        dialogBox.setAnimationEnabled(true);
-        dialogBox.setWidget(dialogBoxContent);
     }
 
     private void validateAndUpdateCredit() {
@@ -168,8 +155,9 @@ public class CreditManager extends Composite {
         totalAmount.setText(TOTAL + String.valueOf(credit));
     }
 
-    public float getCredit() {
-        return credit;
+    @Override
+    public float getBalance() {
+        return  credit;
     }
 
 }

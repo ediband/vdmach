@@ -24,21 +24,26 @@ import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.nuance.vdmach.common.vo.ItemDTO;
-import com.nuance.vdmach.gui.client.event.EventUtil;
+import com.nuance.vdmach.gui.client.event.Bus;
 import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseEvent;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseEventHandler;
+import com.nuance.vdmach.gui.client.exceptions.InsufficientFundsException;
+import com.nuance.vdmach.gui.client.exceptions.ProductOutOfStockException;
 import com.nuance.vdmach.gui.client.services.ProductService;
 import com.nuance.vdmach.gui.client.widgets.CreditManager;
 import com.nuance.vdmach.gui.client.widgets.ItemPurchaser;
+import com.nuance.vdmach.gui.client.widgets.SystemConsole;
 
 /**
  * @author edi
  *         15-08-18 10:55 PM.
  */
 public class DashboardView extends Composite {
+
+    private static final String INSUFFICIENT_FUNDS_INTRO = "You are missing $ ";
+    private static final String INSUFFICIENT_FUNDS_END = " to buy this/these product(s)!";
 
     interface DashboardViewUiBinder extends UiBinder<Widget, DashboardView> {
     }
@@ -58,6 +63,9 @@ public class DashboardView extends Composite {
     @UiField
     ItemPurchaser itemPurchaser;
 
+    @UiField
+    SystemConsole systemConsole;
+
     ListDataProvider<ItemDTO> productsList = new ListDataProvider<ItemDTO>();
 
     public DashboardView() {
@@ -67,28 +75,52 @@ public class DashboardView extends Composite {
         registerEventHandlers();
 
         loadData();
-
     }
 
     private void registerEventHandlers() {
-        HandlerRegistration handlerRegistration = EventUtil.EVENT_BUS.addHandler(ProductPurchaseEvent.TYPE, new ProductPurchaseEventHandler() {
+        Bus.EVENT_BUS.addHandler(ProductPurchaseEvent.TYPE, new ProductPurchaseEventHandler() {
             @Override
             public void onPurchase(final ProductPurchaseEvent event) {
-                ProductService.App.getInstance().sellProduct(event.getProductId(), event.getProductQty(), new AsyncCallback<List<ItemDTO>>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Window.alert("Error while getting products: " + caught.getMessage());
-                    }
+                ItemDTO product = getProductForId(productsList.getList(), event.getProductId());
 
-                    @Override
-                    public void onSuccess(List<ItemDTO> result) {
-                        productsList.setList(result);
-                        ItemDTO product = getProductForId(result, event.getProductId());
-                        EventUtil.EVENT_BUS.fireEvent(new InventoryUpdateSuccessfulEvent(product, event.getProductQty()));
-                    }
-                });
+                try {
+                    final float remainder = checkBalance(product.getPrice(), event.getProductQty());
+
+                    checkStock(product, event.getProductQty());
+
+                    ProductService.App.getInstance().sellProduct(event.getProductId(), event.getProductQty(), new AsyncCallback<List<ItemDTO>>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            Window.alert("Error while getting products: " + caught.getMessage());
+                        }
+
+                        @Override
+                        public void onSuccess(List<ItemDTO> result) {
+                            productsList.setList(result);
+                            ItemDTO product = getProductForId(result, event.getProductId());
+                            Bus.EVENT_BUS.fireEvent(new InventoryUpdateSuccessfulEvent(product, event.getProductQty(), remainder));
+                        }
+                    });
+
+                } catch (InsufficientFundsException | ProductOutOfStockException e) {
+                    systemConsole.displayErrorMessage(e.getMessage());
+                }
             }
         });
+    }
+
+    private void checkStock(ItemDTO product, Integer requiredQty) throws ProductOutOfStockException {
+        if (product.getQuantity() < requiredQty) {
+            throw new ProductOutOfStockException("Not enough " + product.getName() + " in stock to fulfill your request!");
+        }
+    }
+
+    private float checkBalance(Float price, Integer productQty) throws InsufficientFundsException {
+        float remainder = creditManager.getBalance() - price * productQty;
+        if (remainder < 0) {
+            throw new InsufficientFundsException(INSUFFICIENT_FUNDS_INTRO + remainder + INSUFFICIENT_FUNDS_END);
+        }
+        return remainder;
     }
 
     private ItemDTO getProductForId(List<ItemDTO> itemDTOList, Long productId) {
@@ -138,7 +170,7 @@ public class DashboardView extends Composite {
         cellTablePager.setDisplay(cellTable);
 
         // Add a selection model so we can select cells.
-        cellTable.setSelectionModel(new MultiSelectionModel(itemDTOKeyProvider), DefaultSelectionEventManager.<ItemDTO> createDefaultManager());
+        cellTable.setSelectionModel(new MultiSelectionModel(itemDTOKeyProvider), DefaultSelectionEventManager.<ItemDTO>createDefaultManager());
 
         // Initialize the columns.
         initTableColumns(sortHandler);

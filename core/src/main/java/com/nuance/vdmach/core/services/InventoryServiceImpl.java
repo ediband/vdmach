@@ -19,6 +19,7 @@ public class InventoryServiceImpl implements InventoryService {
     @Inject
     ItemRepository itemRepository;
 
+    @Override
     public List<ItemDTO> findAllItems() {
         return itemRepository.findAllItems();
     }

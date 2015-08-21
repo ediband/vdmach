@@ -12,12 +12,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.nuance.vdmach.gui.client.event.EventUtil;
+import com.nuance.vdmach.gui.client.event.Bus;
 import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
 import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEventHandler;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseEvent;
@@ -33,8 +31,11 @@ public class ItemPurchaser extends Composite {
 
     interface ItemPurchaserBinder extends UiBinder<Widget, ItemPurchaser> {
     }
-
     private static final ItemPurchaserBinder binder = GWT.create(ItemPurchaserBinder.class);
+
+    public interface CreditChecker {
+        float getBalance();
+    }
 
     @UiField
     TextBox productKey;
@@ -51,9 +52,6 @@ public class ItemPurchaser extends Composite {
     @UiField
     Label productQtyErrorMsg;
 
-    private DialogBox dialogBox;
-    private HTML dialogBoxContent;
-
     public ItemPurchaser() {
 
         initWidget(binder.createAndBindUi(this));
@@ -69,27 +67,21 @@ public class ItemPurchaser extends Composite {
         });
 
         registerEventHandlers();
-
-        initDialogBox();
     }
 
     private void registerEventHandlers() {
-        EventUtil.EVENT_BUS.addHandler(InventoryUpdateSuccessfulEvent.TYPE, new InventoryUpdateSuccessfulEventHandler() {
+        Bus.EVENT_BUS.addHandler(InventoryUpdateSuccessfulEvent.TYPE, new InventoryUpdateSuccessfulEventHandler() {
             @Override
             public void onInventoryUpdate(InventoryUpdateSuccessfulEvent event) {
-                dialogBoxContent.setText("You've purchased " + event.getQtySold() + " " + event.getProductSold().getName() + "!");
-                dialogBox.showRelativeTo(purchaseBtn);
+                clearFields();
             }
         });
     }
 
-    private void initDialogBox() {
-        dialogBox = new DialogBox(true);
-        dialogBox.setAnimationEnabled(true);
-        dialogBoxContent = new HTML();
-        dialogBox.setWidget(dialogBoxContent);
+    private void clearFields() {
+        productKey.setText(null);
+        productQty.setText(null);
     }
-
 
     private void configureTextBox(final TextBox textBox, final Label errorLabel) {
         textBox.addFocusHandler(new FocusHandler() {
@@ -120,7 +112,7 @@ public class ItemPurchaser extends Composite {
         }
 
         if (keyOK && qtyOK) {
-            EventUtil.EVENT_BUS.fireEvent(new ProductPurchaseEvent(Long.valueOf(productKey.getValue()), Integer.valueOf(productQty.getValue())));
+            Bus.EVENT_BUS.fireEvent(new ProductPurchaseEvent(Long.valueOf(productKey.getValue()), Integer.valueOf(productQty.getValue())));
         }
     }
 

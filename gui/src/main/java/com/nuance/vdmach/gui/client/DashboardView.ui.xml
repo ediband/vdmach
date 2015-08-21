@@ -40,6 +40,10 @@
             <g:Label addStyleNames="{style.verticalSpace50px}" />
 
             <w:ItemPurchaser ui:field="itemPurchaser" />
+
+            <g:Label addStyleNames="{style.verticalSpace50px}" />
+
+            <w:SystemConsole ui:field="systemConsole" />
         </g:VerticalPanel>
     </g:HorizontalPanel>
 

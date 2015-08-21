@@ -40,6 +40,9 @@ public class SpringJpaConfiguration {
     @Value("classpath:data.sql")
     private Resource dataScript;
 
+    @Value("classpath:restock.sql")
+    private Resource restockScript;
+
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
@@ -84,6 +87,7 @@ public class SpringJpaConfiguration {
         final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(schemaScript);
         populator.addScript(dataScript);
+        populator.addScript(restockScript);
         return populator;
     }
 

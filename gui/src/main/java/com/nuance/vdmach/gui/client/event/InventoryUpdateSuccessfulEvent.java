@@ -12,11 +12,13 @@ public class InventoryUpdateSuccessfulEvent extends GwtEvent<InventoryUpdateSucc
     public static final Type<InventoryUpdateSuccessfulEventHandler> TYPE = new Type<InventoryUpdateSuccessfulEventHandler>();
 
     private ItemDTO productSold;
-    private Integer qtySold;
+    private int qtySold;
+    private float change;
 
-    public InventoryUpdateSuccessfulEvent(ItemDTO sold,  Integer qty) {
+    public InventoryUpdateSuccessfulEvent(ItemDTO sold, int qty, float change) {
         productSold = sold;
         qtySold = qty;
+        change = change;
     }
 
     public ItemDTO getProductSold() {
@@ -25,6 +27,10 @@ public class InventoryUpdateSuccessfulEvent extends GwtEvent<InventoryUpdateSucc
 
     public Integer getQtySold() {
         return qtySold;
+    }
+
+    public float getChange() {
+        return change;
     }
 
     @Override
