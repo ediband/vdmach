@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 
 import com.nuance.vdmach.common.util.VOUtil;
 import com.nuance.vdmach.common.vo.ItemDTO;
@@ -42,4 +43,12 @@ public class ItemRepository {
     }
 
 
+    @Transactional
+    public ItemDTO decreaseItemCount(Long itemId, Integer count) {
+        Item item = itemRepositoryInterface.findOne(itemId);
+        Integer oldQty = item.getQuantity();
+        Integer newQty = oldQty - count;
+        item.setQuantity(newQty > 0 ? newQty : 0);
+        return VOUtil.convertToVO(item, ItemDTO.class);
+    }
 }

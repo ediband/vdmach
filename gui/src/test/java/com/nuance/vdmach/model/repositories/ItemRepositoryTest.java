@@ -37,4 +37,12 @@ public class ItemRepositoryTest{
         assertThat(itemDTO.getPrice(), equalTo(item.getPrice()));
         assertThat(itemDTO.getQuantity(), equalTo(item.getQuantity()));
     }
+
+    @Test
+    public void itemQtyNotUpdatedToNegativeValue() throws Exception {
+        Mockito.when(itemRepositoryInterface.findOne(1L)).thenReturn(new Item(1L, null, null, null, 1));
+        ItemDTO itemDTO = itemRepository.decreaseItemCount(1L, 2);
+        assertThat(itemDTO.getQuantity(), equalTo(0));
+
+    }
 }

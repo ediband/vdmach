@@ -15,10 +15,13 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.nuance.vdmach.gui.client.event.EventUtil;
+import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
+import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEventHandler;
 
 /**
  * @author edi
@@ -26,8 +29,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class CreditManager extends Composite {
 
-    public static final String PROMPT_CREDIT_INPUT = "Insert $ ...";
+    public static final String PROMPT_CREDIT_INPUT = "Amount $ ...";
     public static final String TOTAL = "Total ($): ";
+    public static final String INVALID_AMOUNT_MSG = "The amount must be a positive number!";
 
     interface CreditManagerBinder extends UiBinder<Widget, CreditManager> {
     }
@@ -51,6 +55,8 @@ public class CreditManager extends Composite {
     private float credit = 0.0f;
 
     private DialogBox dialogBox;
+    private HTML dialogBoxContent;
+
 
     public CreditManager() {
         initWidget(binder.createAndBindUi(this));
@@ -67,7 +73,7 @@ public class CreditManager extends Composite {
         creditInputBox.addBlurHandler(new BlurHandler() {
             @Override
             public void onBlur(BlurEvent event) {
-                if (creditInputBox.getText() == null || creditInputBox.getText().isEmpty()) {
+                if (creditInputBox.getValue().isEmpty()) {
                     creditInputBox.setText(PROMPT_CREDIT_INPUT);
                 }
             }
@@ -93,26 +99,37 @@ public class CreditManager extends Composite {
         refundBtn.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                dialogBox.setText("You got $ " + credit + " back!");
+                dialogBoxContent.setText("You got $ " + credit + " back!");
                 dialogBox.showRelativeTo(refundBtn);
                 resetCredit();
             }
         });
 
+        registerEventHandlers();
 
         initDialogBox();
+    }
+
+    private void registerEventHandlers() {
+        EventUtil.EVENT_BUS.addHandler(InventoryUpdateSuccessfulEvent.TYPE, new InventoryUpdateSuccessfulEventHandler() {
+            @Override
+            public void onInventoryUpdate(InventoryUpdateSuccessfulEvent event) {
+                setCredit(credit - (event.getQtySold() * event.getProductSold().getPrice()));
+            }
+        });
     }
 
     private void initDialogBox() {
         dialogBox = new DialogBox(true);
         dialogBox.setAnimationEnabled(true);
+        dialogBox.setWidget(dialogBoxContent);
     }
 
     private void validateAndUpdateCredit() {
         if (isValid(creditInputBox)) {
             addCredit(Float.valueOf(creditInputBox.getText()));
         } else {
-            displayError("The input must be a positive number!");
+            displayError(INVALID_AMOUNT_MSG);
         }
     }
 
@@ -146,8 +163,9 @@ public class CreditManager extends Composite {
         totalAmount.setText(TOTAL + String.valueOf(credit));
     }
 
-    public void setCredit(float credit) {
+    private void setCredit(float credit) {
         this.credit = credit;
+        totalAmount.setText(TOTAL + String.valueOf(credit));
     }
 
     public float getCredit() {

@@ -13,7 +13,6 @@ import com.nuance.vdmach.common.vo.ItemDTO;
 @RemoteServiceRelativePath("product.rpc")
 public interface ProductService extends RemoteService {
 
-
     public static class App {
         private static final ProductServiceAsync instance = (ProductServiceAsync) GWT.create(ProductService.class);
 
@@ -23,4 +22,6 @@ public interface ProductService extends RemoteService {
     }
 
     List<ItemDTO> getAllProducts();
+
+    List<ItemDTO> sellProduct(Long productId, Integer productQty);
 }

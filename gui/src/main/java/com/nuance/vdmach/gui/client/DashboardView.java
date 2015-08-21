@@ -18,17 +18,21 @@ import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
-import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
-import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.nuance.vdmach.common.vo.ItemDTO;
+import com.nuance.vdmach.gui.client.event.EventUtil;
+import com.nuance.vdmach.gui.client.event.InventoryUpdateSuccessfulEvent;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseEvent;
+import com.nuance.vdmach.gui.client.event.ProductPurchaseEventHandler;
 import com.nuance.vdmach.gui.client.services.ProductService;
 import com.nuance.vdmach.gui.client.widgets.CreditManager;
+import com.nuance.vdmach.gui.client.widgets.ItemPurchaser;
 
 /**
  * @author edi
@@ -51,8 +55,8 @@ public class DashboardView extends Composite {
     @UiField
     CreditManager creditManager;
 
-//    @UiField
-//    ItemPurchaser itemPurchaser;
+    @UiField
+    ItemPurchaser itemPurchaser;
 
     ListDataProvider<ItemDTO> productsList = new ListDataProvider<ItemDTO>();
 
@@ -60,8 +64,40 @@ public class DashboardView extends Composite {
 
         initWidget(binder.createAndBindUi(this));
 
+        registerEventHandlers();
+
         loadData();
 
+    }
+
+    private void registerEventHandlers() {
+        HandlerRegistration handlerRegistration = EventUtil.EVENT_BUS.addHandler(ProductPurchaseEvent.TYPE, new ProductPurchaseEventHandler() {
+            @Override
+            public void onPurchase(final ProductPurchaseEvent event) {
+                ProductService.App.getInstance().sellProduct(event.getProductId(), event.getProductQty(), new AsyncCallback<List<ItemDTO>>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        Window.alert("Error while getting products: " + caught.getMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(List<ItemDTO> result) {
+                        productsList.setList(result);
+                        ItemDTO product = getProductForId(result, event.getProductId());
+                        EventUtil.EVENT_BUS.fireEvent(new InventoryUpdateSuccessfulEvent(product, event.getProductQty()));
+                    }
+                });
+            }
+        });
+    }
+
+    private ItemDTO getProductForId(List<ItemDTO> itemDTOList, Long productId) {
+        for (ItemDTO itemDTO : itemDTOList) {
+            if (itemDTO.getId().equals(productId)) {
+                return itemDTO;
+            }
+        }
+        return null;
     }
 
     private void loadData() {
@@ -159,14 +195,15 @@ public class DashboardView extends Composite {
             }
         };
         quantityColumn.setSortable(true);
+        quantityColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         sortHandler.setComparator(quantityColumn, new Comparator<ItemDTO>() {
             @Override
             public int compare(ItemDTO o1, ItemDTO o2) {
                 return o1.getQuantity().compareTo(o2.getQuantity());
             }
         });
-        cellTable.addColumn(quantityColumn, "QTY");
-        cellTable.setColumnWidth(quantityColumn, 100, Unit.PX);
+        cellTable.addColumn(quantityColumn, "QTY (In Stock)");
+        cellTable.setColumnWidth(quantityColumn, 120, Unit.PX);
 
         // Price
         Column<ItemDTO, String> priceColumn = new Column<ItemDTO, String>(new TextCell()) {

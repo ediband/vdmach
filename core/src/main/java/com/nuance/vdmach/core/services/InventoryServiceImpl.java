@@ -22,4 +22,9 @@ public class InventoryServiceImpl implements InventoryService {
     public List<ItemDTO> findAllItems() {
         return itemRepository.findAllItems();
     }
+
+    @Override
+    public void decreaseItemCountInInventory(Long itemId, Integer count) {
+        itemRepository.decreaseItemCount(itemId, count);
+    }
 }

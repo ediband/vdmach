@@ -11,4 +11,6 @@ import com.nuance.vdmach.common.vo.ItemDTO;
 public interface ProductServiceAsync {
 
     void getAllProducts(AsyncCallback<List<ItemDTO>> async);
+
+    void sellProduct(Long productId, Integer productQty, AsyncCallback<List<ItemDTO>> async);
 }

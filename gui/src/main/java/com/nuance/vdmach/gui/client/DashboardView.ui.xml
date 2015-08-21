@@ -10,16 +10,22 @@
             text-align: left;
             margin-bottom: 4px;
         }
+
         .tableLabel {
             font-size: 20px;
             font-weight: bold;
             color: #777777;
             margin-bottom: 15px;
         }
+
+        .verticalSpace50px {
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
     </ui:style>
 
 
-    <g:HorizontalPanel spacing="20">
+    <g:HorizontalPanel spacing="40">
         <g:VerticalPanel width="500px">
             <g:Label styleName="{style.tableLabel}">Available Products</g:Label>
 
@@ -28,9 +34,12 @@
             <c:SimplePager ui:field='cellTablePager'/>
         </g:VerticalPanel>
 
-        <g:VerticalPanel width="100%">
+        <g:VerticalPanel>
             <w:CreditManager ui:field="creditManager" />
-            <!--<w:ItemPurchaser ui:field="itemPurchaser" />-->
+
+            <g:Label addStyleNames="{style.verticalSpace50px}" />
+
+            <w:ItemPurchaser ui:field="itemPurchaser" />
         </g:VerticalPanel>
     </g:HorizontalPanel>
 

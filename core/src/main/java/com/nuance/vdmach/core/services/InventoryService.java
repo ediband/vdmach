@@ -13,4 +13,6 @@ import com.nuance.vdmach.common.vo.ItemDTO;
 public interface InventoryService {
 
     List<ItemDTO> findAllItems();
+
+    void decreaseItemCountInInventory(Long itemId, Integer count);
 }

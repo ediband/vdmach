@@ -1,0 +1,55 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:c='urn:import:com.google.gwt.user.cellview.client'
+             xmlns:w='urn:import:com.nuance.vdmach.gui.client.widgets'
+        >
+
+    <ui:style>
+        .controlLabel {
+            font-size: 15px;
+            font-weight: bold;
+            color: #777777;
+        }
+
+        .separator {
+            position: relative;
+            top: 24px;
+            margin: 0px 2px;
+        }
+
+        .purchaseBtn {
+            position: relative;
+            top: 18px;
+            margin-left: 2px;
+        }
+        .error {
+            color: red;
+        }
+    </ui:style>
+
+
+    <g:VerticalPanel>
+        <g:Label addStyleNames="{style.controlLabel}">Purchase Product Here</g:Label>
+
+        <g:HorizontalPanel spacing="5">
+            <g:VerticalPanel>
+                <g:Label text="Key" />
+                <g:TextBox ui:field="productKey" width="80px" alignment="RIGHT"/>
+            </g:VerticalPanel>
+
+            <g:Label text="X" addStyleNames="{style.separator}"/>
+
+            <g:VerticalPanel>
+                <g:Label text="Qty" />
+                <g:TextBox ui:field="productQty" width="50px" alignment="RIGHT"/>
+            </g:VerticalPanel>
+
+            <g:Button ui:field="purchaseBtn" text="PURCHASE" addStyleNames="{style.purchaseBtn}" />
+        </g:HorizontalPanel>
+
+        <g:Label ui:field="productKeyErrorMsg" visible="false" addStyleNames="{style.error}" />
+        <g:Label ui:field="productQtyErrorMsg" visible="false" addStyleNames="{style.error}" />
+
+    </g:VerticalPanel>
+
+</ui:UiBinder>

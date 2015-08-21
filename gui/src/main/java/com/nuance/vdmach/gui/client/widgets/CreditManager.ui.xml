@@ -19,13 +19,6 @@
             font-weight: bold;
             color: #777777;
         }
-        .floatLeft {
-            float: left;
-        }
-        .floatRight {
-            float: right;
-        }
-
     </ui:style>
 
 
