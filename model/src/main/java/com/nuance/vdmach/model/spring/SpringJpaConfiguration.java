@@ -55,7 +55,6 @@ public class SpringJpaConfiguration {
         return emf;
     }
 
-
     @Bean
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -63,23 +62,12 @@ public class SpringJpaConfiguration {
         dataSource.setUrl("jdbc:h2:file:/tmp/vdmach");
         dataSource.setUsername("sa");
         dataSource.setPassword("sa");
-
-//        DatabasePopulatorUtils.execute(createDatabasePopulator(), dataSource);
-
         return dataSource;
     }
-
-//    private DatabasePopulator createDatabasePopulator() {
-//        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-//        databasePopulator.setContinueOnError(true);
-//        databasePopulator.addScript(new ClassPathResource("data.sql"));
-//        return databasePopulator;
-//    }
 
     Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-//        properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.show_sql", "true");
         return properties;
     }

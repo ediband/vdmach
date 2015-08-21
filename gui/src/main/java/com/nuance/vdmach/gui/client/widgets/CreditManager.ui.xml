@@ -1,0 +1,49 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:c='urn:import:com.google.gwt.user.cellview.client'
+             xmlns:w='urn:import:com.nuance.vdmach.gui.client.widgets'
+        >
+
+    <ui:style>
+        .totalAmount {
+            font-weight: bold;
+            color: darkgreen;
+            font-size: 20px;
+        }
+        .error {
+            color: red;
+        }
+
+        .controlLabel {
+            font-size: 15px;
+            font-weight: bold;
+            color: #777777;
+        }
+        .floatLeft {
+            float: left;
+        }
+        .floatRight {
+            float: right;
+        }
+
+    </ui:style>
+
+
+    <g:VerticalPanel>
+        <g:Label addStyleNames="{style.controlLabel}">Add Credit Here</g:Label>
+
+        <g:HorizontalPanel spacing="5">
+            <g:TextBox ui:field="creditInputBox" alignment="RIGHT" width="100px"/>
+            <g:Button ui:field="insertBtn" text="INSERT" />
+            <g:Button ui:field="refundBtn" text="REFUND" />
+        </g:HorizontalPanel>
+
+        <g:Label ui:field="errorMsg" visible="false" addStyleNames="{style.error}"/>
+
+        <g:Label ui:field="totalAmount" width="150px" addStyleNames="{style.totalAmount}" />
+        <g:HorizontalPanel spacing="5">
+        </g:HorizontalPanel>
+
+    </g:VerticalPanel>
+
+</ui:UiBinder>

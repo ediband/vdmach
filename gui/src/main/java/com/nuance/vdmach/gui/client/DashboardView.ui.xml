@@ -1,18 +1,37 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:c='urn:import:com.google.gwt.user.cellview.client'>
+             xmlns:c='urn:import:com.google.gwt.user.cellview.client'
+             xmlns:w='urn:import:com.nuance.vdmach.gui.client.widgets'
+        >
 
-    <g:HTMLPanel>
+    <ui:style>
+        .cellTable {
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+            margin-bottom: 4px;
+        }
+        .tableLabel {
+            font-size: 20px;
+            font-weight: bold;
+            color: #777777;
+            margin-bottom: 15px;
+        }
+    </ui:style>
 
-        <g:HorizontalPanel>
-            <g:VerticalPanel>
-                <g:Label>Available Products</g:Label>
-                <c:CellTable ui:field="cellTable" />
-            </g:VerticalPanel>
 
-            <g:VerticalPanel>
+    <g:HorizontalPanel spacing="20">
+        <g:VerticalPanel width="500px">
+            <g:Label styleName="{style.tableLabel}">Available Products</g:Label>
 
-            </g:VerticalPanel>
-        </g:HorizontalPanel>
-    </g:HTMLPanel>
+            <c:CellTable ui:field="cellTable" addStyleNames='{style.cellTable}' pageSize='15'/>
+
+            <c:SimplePager ui:field='cellTablePager'/>
+        </g:VerticalPanel>
+
+        <g:VerticalPanel width="100%">
+            <w:CreditManager ui:field="creditManager" />
+            <!--<w:ItemPurchaser ui:field="itemPurchaser" />-->
+        </g:VerticalPanel>
+    </g:HorizontalPanel>
+
 </ui:UiBinder>
