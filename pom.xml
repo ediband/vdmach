@@ -18,6 +18,7 @@
 
     <properties>
         <springVersion>4.2.0.RELEASE</springVersion>
+        <gwtVersion>2.7.0</gwtVersion>
     </properties>
 
     <build>
@@ -27,6 +28,10 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.3</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>gwt-maven-plugin</artifactId>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -47,7 +52,7 @@
             <dependency>
                 <groupId>com.google.gwt</groupId>
                 <artifactId>gwt-user</artifactId>
-                <version>2.7.0</version>
+                <version>${gwtVersion}</version>
             </dependency>
 
             <dependency>
@@ -62,6 +67,7 @@
                 <version>1.2</version>
             </dependency>
 
+            <!-- spring -->
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-jpa</artifactId>
@@ -88,7 +94,7 @@
                 <version>1.0.0</version>
             </dependency>
 
-
+            <!-- hibernate -->
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
                 <artifactId>hibernate-jpa-2.1-api</artifactId>
@@ -106,6 +112,7 @@
                 <version>1.4.188</version>
             </dependency>
 
+            <!-- project modules -->
             <dependency>
                 <groupId>com.nuance.vdmach</groupId>
                 <artifactId>vdmachCommon</artifactId>
