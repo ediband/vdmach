@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.nuance.vdmach.common.vo.ItemDTO;
 import com.nuance.vdmach.gui.client.event.Bus;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEvent;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEventHandler;
@@ -87,7 +88,7 @@ public class ItemPurchaser extends Composite {
         textBox.addFocusHandler(new FocusHandler() {
             @Override
             public void onFocus(FocusEvent event) {
-                clearError(textBox, errorLabel);
+                clearError(errorLabel, textBox);
             }
         });
         textBox.addKeyDownHandler(new KeyDownHandler() {
@@ -112,17 +113,28 @@ public class ItemPurchaser extends Composite {
         }
 
         if (keyOK && qtyOK) {
+            clearError(productKeyErrorMsg, null);
+            clearError(productQtyErrorMsg, null);
+
             Bus.EVENT_BUS.fireEvent(new ProductPurchaseEvent(Long.valueOf(productKey.getValue()), Integer.valueOf(productQty.getValue())));
         }
     }
+
+    public void selectProductForPurchase(ItemDTO selectedObject) {
+        productKey.setValue(String.valueOf(selectedObject.getId()));
+        productQty.setValue("1");
+    }
+
 
     private void displayErrorMsg(Label errorLabel, String msg) {
         errorLabel.setText(msg);
         errorLabel.setVisible(true);
     }
 
-    private void clearError(TextBox field, Label errorLabel) {
-        field.setValue(null);
+    private void clearError(Label errorLabel, TextBox field) {
+        if (field != null) {
+            field.setValue(null);
+        }
         errorLabel.setText(null);
         errorLabel.setVisible(false);
     }

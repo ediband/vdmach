@@ -2,6 +2,7 @@ package com.nuance.vdmach.gui.client;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
@@ -23,7 +24,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
+import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.nuance.vdmach.common.vo.ItemDTO;
 import com.nuance.vdmach.gui.client.event.Bus;
 import com.nuance.vdmach.gui.client.event.ProductPurchaseSuccessfulEvent;
@@ -170,7 +174,14 @@ public class DashboardView extends Composite {
         cellTablePager.setDisplay(cellTable);
 
         // Add a selection model so we can select cells.
-        cellTable.setSelectionModel(new MultiSelectionModel(itemDTOKeyProvider), DefaultSelectionEventManager.<ItemDTO>createDefaultManager());
+        final NoSelectionModel<ItemDTO> selectionModel = new NoSelectionModel<>(itemDTOKeyProvider);
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                itemPurchaser.selectProductForPurchase(selectionModel.getLastSelectedObject());
+            }
+        });
+        cellTable.setSelectionModel(selectionModel, DefaultSelectionEventManager.<ItemDTO>createDefaultManager());
 
         // Initialize the columns.
         initTableColumns(sortHandler);

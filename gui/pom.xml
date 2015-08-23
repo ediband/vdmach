@@ -29,8 +29,11 @@
                 </executions>
 
                 <configuration>
-                    <hostedWebapp>${project.build.directory}/${build.finalName}</hostedWebapp>
+                    <hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
                     <generateDirectory>${project.build.directory}/generated-sources</generateDirectory>
+                    <compileSourcesArtifacts>
+                        <compileSourcesArtifact>com.nuance.vdmach:vdmachCommon</compileSourcesArtifact>
+                    </compileSourcesArtifacts>
                 </configuration>
             </plugin>
         </plugins>
