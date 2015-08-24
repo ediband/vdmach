@@ -17,7 +17,7 @@
         .controlLabel {
             font-size: 15px;
             font-weight: bold;
-            color: #555555;
+            color: royalblue;
         }
     </ui:style>
 

@@ -16,6 +16,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.Resources;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
@@ -78,7 +79,18 @@ public class DashboardView extends Composite {
 
         registerEventHandlers();
 
+        configurePageRefreshTimer();
+
         loadData();
+    }
+
+    private void configurePageRefreshTimer() {
+        Timer timer = new Timer() {
+            public void run() {
+                loadData();
+            }
+        };
+        timer.schedule(1 * 60 * 1000);  // refresh every minute
     }
 
     private void registerEventHandlers() {
@@ -246,7 +258,7 @@ public class DashboardView extends Composite {
             }
         });
         cellTable.addColumn(quantityColumn, "QTY (In Stock)");
-        cellTable.setColumnWidth(quantityColumn, 120, Unit.PX);
+        cellTable.setColumnWidth(quantityColumn, 130, Unit.PX);
 
         // Price
         Column<ItemDTO, String> priceColumn = new Column<ItemDTO, String>(new TextCell()) {
