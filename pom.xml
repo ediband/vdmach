@@ -19,6 +19,9 @@
     <properties>
         <springVersion>4.2.0.RELEASE</springVersion>
         <gwtVersion>2.7.0</gwtVersion>
+        <atmosphereVersion>2.4.0-RC1</atmosphereVersion>
+        <atmosphereVersionGWT27>2.3.0-GWT27</atmosphereVersionGWT27>
+
     </properties>
 
     <build>
@@ -59,6 +62,32 @@
                 <groupId>com.google.gwt</groupId>
                 <artifactId>gwt-user</artifactId>
                 <version>${gwtVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.atmosphere.extensions</groupId>
+                <artifactId>atmosphere-gwt20-client</artifactId>
+                <version>${atmosphereVersionGWT27}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.atmosphere.extensions</groupId>
+                <artifactId>atmosphere-gwt20-server</artifactId>
+                <version>${atmosphereVersionGWT27}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.atmosphere</groupId>
+                <artifactId>atmosphere-runtime</artifactId>
+                <version>${atmosphereVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.atmosphere</groupId>
+                <artifactId>atmosphere-spring</artifactId>
+                <version>${atmosphereVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>5.0.4</version>
             </dependency>
 
             <dependency>
